@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.*?>
+<AnchorPane minHeight="400.0" minWidth="200.0" prefHeight="400.0" prefWidth="200.0" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/8" fx:controller="main.java.com.rps.gui.controllers.PeerController">
+   <VBox prefHeight="388.0" prefWidth="166.0" spacing="10.0" AnchorPane.bottomAnchor="0.0"
+         AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="10.0">
+       <Label text="Start Server">
+           <VBox.margin>
+               <Insets/>
+           </VBox.margin>
+           <font>
+               <Font name="System Bold" size="13.0"/>
+           </font>
+       </Label>
+       <HBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="151.0" spacing="5.0">
+           <VBox layoutX="10.0" layoutY="10.0" prefHeight="44.0" prefWidth="41.0">
+               <Label text="Port">
+                   <font>
+                       <Font size="10.0"/>
+                   </font>
+               </Label>
+               <TextField prefHeight="25.0" prefWidth="57.0" promptText="Port" text="80" fx:id="serverPort">
+                   <font>
+                       <Font size="10.0"/>
+                   </font>
+               </TextField>
+           </VBox>
+           <Button alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Add" fx:id="startServer">
+               <font>
+                   <Font size="10.0"/>
+               </font>
+               <HBox.margin>
+                   <Insets top="12.0" />
+               </HBox.margin>
+           </Button>
+           <VBox layoutX="10.0" layoutY="10.0" prefHeight="44.0" prefWidth="41.0" xmlns="http://javafx.com/javafx/8"
+                 xmlns:fx="http://javafx.com/fxml/1">
+               <Label text="Status">
+                   <font>
+                       <Font size="10.0"/>
+                   </font>
+               </Label>
+               <Circle fill="DODGERBLUE" radius="4.0" stroke="BLACK" strokeType="INSIDE" fx:id="serverStatusColor">
+                   <VBox.margin>
+                       <Insets left="12.0" top="5.0"/>
+                   </VBox.margin>
+               </Circle>
+           </VBox>
+
+       </HBox>
+       <Label text="Connect to Peer">
+         <VBox.margin>
+            <Insets/>
+         </VBox.margin>
+         <font>
+            <Font name="System Bold" size="13.0"/>
+         </font>
+      </Label>
+      <HBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="151.0" spacing="5.0">
+         <VBox prefHeight="100.0" prefWidth="65.0">
+            <Label text="IP Address">
+               <font>
+                  <Font size="10.0"/>
+               </font>
+            </Label>
+            <TextField prefHeight="25.0" prefWidth="57.0" promptText="IP Address" text="127.0.0.1" fx:id="peerIpAddress">
+               <font>
+                  <Font size="10.0"/>
+               </font>
+            </TextField>
+         </VBox>
+          <VBox layoutX="10.0" layoutY="10.0" prefHeight="44.0" prefWidth="41.0">
+              <Label text="Port">
+                 <font>
+                     <Font size="10.0"/>
+                 </font>
+              </Label>
+              <TextField prefHeight="25.0" prefWidth="57.0" promptText="Port" text="80" fx:id="peerPort">
+                 <font>
+                     <Font size="10.0"/>
+                 </font>
+              </TextField>
+          </VBox>
+         <Button alignment="BOTTOM_RIGHT" mnemonicParsing="false" text="Add" fx:id="addPeerButton">
+            <font>
+               <Font size="10.0"/>
+            </font>
+             <HBox.margin>
+                 <Insets top="12.0" />
+             </HBox.margin>
+         </Button>
+      </HBox>
+      <Label text="Existing Peers">
+         <font>
+            <Font name="System Bold" size="13.0"/>
+         </font>
+      </Label>
+      <ListView prefHeight="200.0" fx:id="existingPeersList">
+         <VBox.margin>
+            <Insets/>
+         </VBox.margin>
+      </ListView>
+      <Button alignment="CENTER_RIGHT" cancelButton="true" mnemonicParsing="false" text="Disconnect" fx:id="disconnectButton"/>
+      <Button alignment="CENTER_RIGHT" cancelButton="true" mnemonicParsing="false" text="Exit" fx:id="exitButton"/>
+       <Label alignment="BOTTOM_LEFT" layoutX="367.0" layoutY="277.0" prefHeight="0.0" prefWidth="48.0"
+              text="Version 0.1" textAlignment="RIGHT">
+           <font>
+               <Font size="8.0"/>
+           </font>
+       </Label>
+   </VBox>
+</AnchorPane>
