@@ -1,0 +1,17 @@
+.error {
+    -fx-background-color: #f2dede;
+    -fx-border-color: #ca4b5e;
+    -fx-padding: 3px;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-text-fill: #a94442;
+    -fx-font-size: 10px;
+}
+.error:hover {
+    -fx-background-color: #e4b9b9;
+}
+
+.status-icon {
+    -fx-border-color: green;
+}

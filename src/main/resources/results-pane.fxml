@@ -1,0 +1,19 @@
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="258.0" prefWidth="429.0" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/8" fx:controller="main.java.com.rps.gui.controllers.GameController">
+    <VBox prefHeight="269.0" prefWidth="429.0" spacing="10.0">
+        <padding>
+            <Insets left="20.0" right="5.0" top="5.0"/>
+        </padding>
+        <Label text="Results Log">
+            <font>
+                <Font name="System Bold" size="13.0"/>
+            </font>
+        </Label>
+        <TextArea prefHeight="200.0" prefWidth="200.0" text="Results here" fx:id="resultsLog"/>
+    </VBox>
+</AnchorPane>
