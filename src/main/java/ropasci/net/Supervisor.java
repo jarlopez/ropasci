@@ -5,7 +5,9 @@ import ropasci.net.protocol.RPSMessage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Maintains list of active peer connections and exposes peer management methods
@@ -25,10 +27,21 @@ public class Supervisor implements PeerListener {
 
     @Override
     public void onConnected(Peer peer) {
-        log.info("Peer " + peer.getId() + " has connected");
-        peers.add(peer);
-        if (listener != null) {
-            listener.onPeerConnected(peer);
+        synchronized (peers) {
+            Set<String> existingPeerIds = peers.stream().map(Peer::getId).collect(Collectors.toSet());
+            if (existingPeerIds.contains(peer.getId())) {
+                log.warning("Peer already exists in list of connected peers!");
+//                peer.disconnect();
+                if (listener != null) {
+                    listener.onNotice(peer, Peer.ALREADY_CONNECTED);
+                }
+            } else {
+                log.info("Peer " + peer.getId() + " has connected");
+                peers.add(peer);
+                if (listener != null) {
+                    listener.onPeerConnected(peer);
+                }
+            }
         }
     }
 
