@@ -12,22 +12,17 @@ import java.util.logging.Logger;
 public class Peer {
     private static final Logger log = Logger.getLogger(Peer.class.getName());
 
+    public static final String ALREADY_CONNECTED = "Peer has already connected";
+
     private String id; // Our ID
     private String connectedPeerId; // ID of connected peer
+    private String username; // Username, if provided
 
     private DataInputStream dataIn;
     private DataOutputStream dataOut;
     private SendHandler out;
     private RecvHandler in;
     private Connection connection;
-
-    public int getPort() {
-        return port;
-    }
-
-    public InetAddress getHost() {
-        return host;
-    }
 
     private int port;
     private InetAddress host;
@@ -38,12 +33,27 @@ public class Peer {
         this.id = id;
     }
 
+    public Peer(InetAddress host, int port, String id, String username) {
+        this.host = host;
+        this.port = port;
+        this.id = id;
+        this.username = username;
+    }
+
     public Peer(Socket socket, String id) throws IOException {
         this.id = id;
         this.host = socket.getInetAddress();
         this.port = socket.getPort();
         setupDataStreams(socket);
         handshake();
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public InetAddress getHost() {
+        return host;
     }
 
     public String getId() {

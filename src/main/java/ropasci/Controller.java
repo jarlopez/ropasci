@@ -88,10 +88,16 @@ public class Controller implements SupervisorListener {
 
     @Override
     public void onReceiveCommand(Peer peer, String data) {
-        // TODO Log
         Platform.runLater(() -> {
             logArea.appendText("[CMD] Received command from peer at " + peer.getHost().getHostAddress() + ":" + peer.getPort() + "\n" +
                     "\tCommand: " + data + "\n");
+        });
+    }
+
+    @Override
+    public void onNotice(Peer peer, String msg) {
+        Platform.runLater(() -> {
+            logArea.appendText("[ERR] Network warning: " + msg + "\n");
         });
     }
 
