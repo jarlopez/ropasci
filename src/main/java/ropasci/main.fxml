@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -20,7 +19,7 @@
     <SplitPane dividerPositions="0.2725752508361204" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
         <AnchorPane minHeight="400.0" minWidth="200.0" prefHeight="400.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
             <VBox prefHeight="388.0" prefWidth="166.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="10.0">
-                <Label fx:id="username" text="Username">
+                <Label fx:id="labelUsername" text="Username">
                     <VBox.margin>
                         <Insets />
                     </VBox.margin>
@@ -29,23 +28,11 @@
                     </font>
                 </Label>
                 <HBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="151.0" spacing="5.0">
-                    <Label text="Your are listening on port: ">
+                    <Label fx:id="labelPort" text="Your are listening on port: ">
                         <font>
                             <Font size="10.0" />
                         </font>
                     </Label>
-                    <VBox layoutX="10.0" layoutY="10.0" prefHeight="44.0" prefWidth="41.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-                        <Label text="Status">
-                            <font>
-                                <Font size="10.0" />
-                            </font>
-                        </Label>
-                        <Circle fx:id="serverStatusColor" fill="DODGERBLUE" radius="4.0" stroke="BLACK" strokeType="INSIDE">
-                            <VBox.margin>
-                                <Insets left="12.0" top="5.0" />
-                            </VBox.margin>
-                        </Circle>
-                    </VBox>
 
                 </HBox>
                 <Label text="Connect to Peer">
@@ -63,7 +50,7 @@
                                 <Font size="10.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="peerHost" prefHeight="25.0" prefWidth="57.0" promptText="IP Address" text="127.0.0.1">
+                        <TextField fx:id="peerHost" prefHeight="25.0" prefWidth="57.0" promptText="IP Address" text="localhost">
                             <font>
                                 <Font size="10.0" />
                             </font>
@@ -75,7 +62,7 @@
                                 <Font size="10.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="peerPort" prefHeight="25.0" prefWidth="57.0" promptText="Port" text="80">
+                        <TextField fx:id="peerPort" prefHeight="25.0" prefWidth="57.0" promptText="Port" text="8080">
                             <font>
                                 <Font size="10.0" />
                             </font>
@@ -102,14 +89,14 @@
                 </ListView>
                 <Button fx:id="disconnectButton" alignment="CENTER_RIGHT" cancelButton="true" mnemonicParsing="false" onAction="#disconnect" text="Disconnect" />
                 <Button fx:id="exitButton" alignment="CENTER_RIGHT" cancelButton="true" mnemonicParsing="false" onAction="#exit" text="Exit" />
-                <Label alignment="BOTTOM_LEFT" layoutX="367.0" layoutY="277.0" prefHeight="0.0" prefWidth="48.0" text="Version 0.1" textAlignment="RIGHT">
+                <Label alignment="BOTTOM_LEFT" layoutX="367.0" layoutY="277.0" prefHeight="0.0" prefWidth="48.0" text="Version 1.0" textAlignment="RIGHT">
                     <font>
                         <Font size="8.0" />
                     </font>
                 </Label>
             </VBox>
         </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="100.0">
             <SplitPane orientation="VERTICAL" prefHeight="398.0" prefWidth="431.0">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
                     <VBox prefHeight="200.0" prefWidth="429.0" spacing="10.0">
@@ -121,19 +108,13 @@
                                 <Font name="System Bold" size="13.0" />
                             </font>
                         </Label>
-                        <TextArea fx:id="logArea" editable="false" prefHeight="200.0" prefWidth="200.0" text="Results here">
-                            <padding>
-                                <Insets right="20.0" />
-                            </padding></TextArea>
+                        <TextArea fx:id="logArea" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="370.0" />
                         <Label text="Score">
                             <font>
                                 <Font name="System Bold" size="13.0" />
                             </font>
                         </Label>
-                        <TextArea fx:id="scoreArea" editable="false" prefHeight="200.0" prefWidth="200.0" text="Results here">
-                            <padding>
-                                <Insets right="20.0" />
-                            </padding></TextArea>
+                        <TextArea fx:id="scoreArea" editable="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="140.0" prefWidth="370.0" />
                     </VBox>
                     <HBox alignment="CENTER" prefHeight="97.0" prefWidth="429.0" spacing="10.0">
                         <Button fx:id="rockButton" defaultButton="true" mnemonicParsing="false" onAction="#action" prefHeight="54.0" prefWidth="73.0" text="Rock" />

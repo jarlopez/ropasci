@@ -116,7 +116,7 @@ public class WelcomeController implements Initializable {
                     manager.startNetworking();
 
                     mainController.setNetworkManager(manager);
-                    mainController.displayScene();
+                    mainController.displayScene(username, listeningPort.toString());
                 }
                 catch (IOException e)
                 {

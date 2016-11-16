@@ -6,11 +6,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import ropasci.game.RPSGame;
+import ropasci.game.RPSStateListener;
+import ropasci.game.RPSState;
 import ropasci.net.NetworkManager;
 import ropasci.net.Peer;
 import ropasci.net.SupervisorListener;
@@ -19,7 +19,7 @@ import ropasci.net.protocol.RPSMessage;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-public class MainController implements SupervisorListener
+public class MainController implements SupervisorListener, RPSStateListener
 {
     @FXML public Button rockButton;
     @FXML public Button paperButton;
@@ -34,15 +34,24 @@ public class MainController implements SupervisorListener
     @FXML public TextField peerHost;
     @FXML public TextField peerPort;
 
-    private NetworkManager manager;
+    @FXML public Label labelUsername;
+    @FXML public Label labelPort;
 
     private Parent parent;
     private Stage stage;
     private Scene scene;
 
+    private NetworkManager manager;
+
+    private RPSGame game;
+    private RPSState state;
+
     public MainController(Stage stage)
     {
         this.stage = stage;
+
+        this.game = new RPSGame();
+        this.state = new RPSState(this);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main.fxml"));
         fxmlLoader.setController(this);
@@ -62,8 +71,11 @@ public class MainController implements SupervisorListener
         //serverId.setText(manager.getId());
     }
 
-    public void displayScene()
+    public void displayScene(String username, String listeningPort)
     {
+        this.labelUsername.setText(username);
+        this.labelPort.setText("Listening on port: " + listeningPort);
+
         this.stage.setScene(this.scene);
         stage.show();
     }
@@ -90,9 +102,16 @@ public class MainController implements SupervisorListener
     @Override
     public void onReceiveCommand(Peer peer, String data)
     {
+
         Platform.runLater(() -> {
             logArea.appendText("[CMD] Received command from peer at " + peer.getHost().getHostAddress() + ":" + peer.getPort() + "\n" +
                     "\tCommand: " + data + "\n");
+
+            this.state.stateUpdate(RPSState.StateUpdate.ACTION_RECEIVED);
+            if(peersList.getItems().size() == this.state.getNumberOfActionsReceived())
+            {
+                this.state.stateUpdate(RPSState.StateUpdate.ALL_ACTIONS_RECEIVED);
+            }
         });
     }
 
@@ -107,6 +126,8 @@ public class MainController implements SupervisorListener
     // Called when a action is clicked (rock/paper/scissors)
     public void action(ActionEvent actionEvent)
     {
+        this.state.stateUpdate(RPSState.StateUpdate.ACTION_SENT);
+
         Object source = actionEvent.getSource();
         RPSMessage message = null;
         if (rockButton.equals(source)) {
@@ -147,5 +168,43 @@ public class MainController implements SupervisorListener
     {
         RPSMessage message = new RPSMessage(RPSMessage.HEARTBEAT);
         manager.broadcast(message);
+    }
+
+    @Override
+    public void onGameStateChanged(RPSState.State state)
+    {
+        Platform.runLater(() ->
+        {
+            switch (state)
+            {
+                case OPEN:
+                    rockButton.setDisable(false);
+                    paperButton.setDisable(false);
+                    scissorsButton.setDisable(false);
+                    connectButton.setDisable(false);
+
+                    // TODO : Calculate scores and display result
+                    logArea.appendText("GAME FINISHED - SHOW RESULT" + "\n");
+                    break;
+
+                case IN_PROGRESS:
+                    connectButton.setDisable(true);
+                    logArea.appendText("Game in progress.." + "\n");
+                    break;
+
+                case WAITING_FOR_PEERS:
+                    rockButton.setDisable(true);
+                    paperButton.setDisable(true);
+                    scissorsButton.setDisable(true);
+                    connectButton.setDisable(true);
+                    logArea.appendText("Waiting for all peers to send their action.." + "\n");
+                    break;
+
+                case WAITING_FOR_SELF:
+                    connectButton.setDisable(true);
+                    logArea.appendText("Waiting for your action.." + "\n");
+                    break;
+            }
+        });
     }
 }
