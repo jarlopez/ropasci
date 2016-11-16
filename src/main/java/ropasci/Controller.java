@@ -3,7 +3,11 @@ package ropasci;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import ropasci.net.NetworkManager;
 import ropasci.net.Peer;
 import ropasci.net.SupervisorListener;
@@ -27,6 +31,33 @@ public class Controller implements SupervisorListener {
     @FXML public Label serverId;
 
     private NetworkManager manager;
+
+    private Parent parent;
+    private Stage stage;
+    private Scene scene;
+
+    public Controller(Stage stage) {
+        this.stage = stage;
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        fxmlLoader.setController(this);
+        try {
+            parent = fxmlLoader.load();
+            scene = new Scene(parent, 600, 500);
+        } catch (IOException e) {
+            // manage the exception
+        }
+    }
+
+    public void setNetworkManager(NetworkManager manager){
+        this.manager = manager;
+        serverId.setText(manager.getId());
+    }
+
+    public void displayScene() {
+        this.stage.setScene(this.scene);
+        stage.show();
+    }
 
     public void connectPeer(ActionEvent actionEvent) {
         int port = Integer.parseInt(peerPort.getText());

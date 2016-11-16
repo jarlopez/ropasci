@@ -10,10 +10,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 600, 500));
-        primaryStage.show();
+
+        primaryStage.setTitle("P2P RPS");
+        new WelcomeController(primaryStage).displayScene();
     }
 
 
