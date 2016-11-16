@@ -42,7 +42,7 @@ public class WelcomeController implements Initializable {
         fxmlLoader.setController(this);
         try {
             parent = fxmlLoader.load();
-            scene = new Scene(parent, 600, 500);
+            scene = new Scene(parent, 600, 400);
         } catch (IOException e) {
             // manage the exception
         }
@@ -108,18 +108,21 @@ public class WelcomeController implements Initializable {
                     listeningPortValidator.show(tfListeningPort, Side.BOTTOM, 10, 0);
                 }
 
-                Controller mainController = new Controller(stage);
-                manager = new NetworkManager(listeningPort, mainController);
-
-                try {
+                try
+                {
+                    MainController mainController = new MainController(stage);
+                    manager = new NetworkManager(listeningPort, mainController);
                     manager.setupServer();
-                } catch (IOException e) {
+                    manager.startNetworking();
+
+                    mainController.setNetworkManager(manager);
+                    mainController.displayScene();
+                }
+                catch (IOException e)
+                {
                     e.printStackTrace();
                 }
-                manager.startNetworking();
 
-                mainController.setNetworkManager(manager);
-                mainController.displayScene();
             }
 
         });
