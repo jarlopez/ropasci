@@ -1,0 +1,20 @@
+# Johan
+- Share usernames on handshake (if available)
+- [OPT] Look into peer discovery on join
+- Anything for saving time and completing HW
+
+# Fannar
+
+
+
+TASKS
+- Copy-pasta job for old FXML UI into one primary
+- Also copy-pasta fields from above into primary controller
+- "Lock" game state and disable peer connectivity after ACTION or RECEIVE_ACTION
+- Implemented logic for waiting for responses from all peers (and also capturing own action, of course)
+- When completed (or failed?) calculate scores, show them in UI with usernames (or just IDs, if usernames not available)
+- Show own ID in GUI
+- Disconnect handlers
+
+[optionals]
+- Catch NetworkManager BindException to inform user port is not available
