@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -51,7 +52,9 @@ public class PeerController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         // Hack to prevent autofocus on first field
+
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -225,7 +228,6 @@ public class PeerController implements Initializable {
                 }
             }
         });
-
     }
 
     private void addConnection(ObservableList<PeerConnection> conns) {

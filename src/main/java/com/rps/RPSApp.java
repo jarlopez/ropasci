@@ -7,14 +7,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import main.java.com.rps.gui.controllers.MainController;
+import main.java.com.rps.gui.controllers.WelcomeController;
 import main.java.com.rps.sandbox.SocketListener;
 
 public class RPSApp extends Application {
     public static final String GUI_FXML_LOC = "/main/resources/rps-gui.fxml";
-    private static final String MAIN_CSS_LOC = "/main/resources/css/rps.css";
-    private static final String TITLE = "P2P RPS";
-    private static final int HEIGHT = 400;
-    private static final int WIDTH = 600;
+    public static final String MAIN_CSS_LOC = "/main/resources/css/rps.css";
+    public static final String TITLE = "P2P Rock-Paper-Scissors";
+    public static final int HEIGHT = 400;
+    public static final int WIDTH = 600;
 
     private SocketListener socketListener;
 
@@ -24,13 +25,19 @@ public class RPSApp extends Application {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> Platform.runLater(() -> showErrorDialog(t, e)));
         try {
 
+            primaryStage.setTitle(TITLE);
+            new WelcomeController(primaryStage).displayScene();
+
+            /*
             loader = new FXMLLoader(getClass().getResource(GUI_FXML_LOC));
+            loader.setController(new MainController(primaryStage));
             Parent root = loader.load();
 
             root.getStylesheets().add(MAIN_CSS_LOC);
             primaryStage.setTitle(TITLE);
             primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
             primaryStage.show();
+            */
 
         } catch(Exception e) {
             showErrorDialog(Thread.currentThread(), e);
