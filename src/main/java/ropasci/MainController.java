@@ -18,6 +18,7 @@ import ropasci.net.protocol.RPSMessage;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 
 public class MainController implements SupervisorListener, RPSStateListener
 {
@@ -41,10 +42,12 @@ public class MainController implements SupervisorListener, RPSStateListener
     private Stage stage;
     private Scene scene;
 
+    private String username;
     private NetworkManager manager;
 
     private RPSGame game;
     private RPSState state;
+    private HashMap<String, RPSGame.Action> playerActions;
 
     public MainController(Stage stage)
     {
@@ -52,6 +55,7 @@ public class MainController implements SupervisorListener, RPSStateListener
 
         this.game = new RPSGame();
         this.state = new RPSState(this);
+        this.playerActions = new HashMap<>();
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main.fxml"));
         fxmlLoader.setController(this);
@@ -68,11 +72,12 @@ public class MainController implements SupervisorListener, RPSStateListener
     public void setNetworkManager(NetworkManager manager)
     {
         this.manager = manager;
-        //serverId.setText(manager.getId());
+        this.game.addPlayer(this.username); // TODO
     }
 
     public void displayScene(String username, String listeningPort)
     {
+        this.username = username;
         this.labelUsername.setText(username);
         this.labelPort.setText("Listening on port: " + listeningPort);
 
@@ -84,6 +89,8 @@ public class MainController implements SupervisorListener, RPSStateListener
     public void onPeerConnected(Peer peer)
     {
         Platform.runLater(() -> {
+            this.game.addPlayer(peer.getId());
+
             peersList.getItems().add(peer.getHost().getHostAddress() + ":" + peer.getPort());
             String line = "[PEER] Added peer at " + peer.getHost().getHostAddress() + ":" + peer.getPort() + "\n";
             logArea.appendText(line);
@@ -94,6 +101,8 @@ public class MainController implements SupervisorListener, RPSStateListener
     public void onPeerDisconnected(Peer peer)
     {
         Platform.runLater(() -> {
+            this.game.removePlayer(peer.getId());
+
             logArea.appendText("[PEER] Disconnected peer at " + peer.getHost().getHostAddress() + ":" + peer.getPort() + "\n");
             peersList.getItems().remove(peer.getHost().getHostAddress() + ":" + peer.getPort());
         });
@@ -106,6 +115,25 @@ public class MainController implements SupervisorListener, RPSStateListener
         Platform.runLater(() -> {
             logArea.appendText("[CMD] Received command from peer at " + peer.getHost().getHostAddress() + ":" + peer.getPort() + "\n" +
                     "\tCommand: " + data + "\n");
+
+            // TODO
+            // RPSMessage.ACTION_ROCK ..
+
+            if(data == "[1]")
+            {
+                //rock
+                this.playerActions.put(peer.getId(), RPSGame.Action.ROCK);
+            }
+            else if(data == "[2]")
+            {
+                //paper
+                this.playerActions.put(peer.getId(), RPSGame.Action.PAPER);
+            }
+            else if(data == "[3]")
+            {
+                //scissors
+                this.playerActions.put(peer.getId(), RPSGame.Action.SCISSORS);
+            }
 
             this.state.stateUpdate(RPSState.StateUpdate.ACTION_RECEIVED);
             if(peersList.getItems().size() == this.state.getNumberOfActionsReceived())
@@ -130,11 +158,19 @@ public class MainController implements SupervisorListener, RPSStateListener
 
         Object source = actionEvent.getSource();
         RPSMessage message = null;
-        if (rockButton.equals(source)) {
+        if (rockButton.equals(source))
+        {
+            this.playerActions.put(this.username, RPSGame.Action.ROCK);
             message = new RPSMessage(RPSMessage.ACTION, new byte[]{RPSMessage.ACTION_ROCK});
-        } else if (paperButton.equals(source)) {
+        }
+        else if (paperButton.equals(source))
+        {
+            this.playerActions.put(this.username, RPSGame.Action.PAPER);
             message = new RPSMessage(RPSMessage.ACTION, new byte[]{RPSMessage.ACTION_PAPER});
-        } else if (scissorsButton.equals(source)) {
+        }
+        else if (scissorsButton.equals(source))
+        {
+            this.playerActions.put(this.username, RPSGame.Action.SCISSORS);
             message = new RPSMessage(RPSMessage.ACTION, new byte[]{RPSMessage.ACTION_SCISSORS});
         }
         manager.broadcast(message);
@@ -182,9 +218,7 @@ public class MainController implements SupervisorListener, RPSStateListener
                     paperButton.setDisable(false);
                     scissorsButton.setDisable(false);
                     connectButton.setDisable(false);
-
-                    // TODO : Calculate scores and display result
-                    logArea.appendText("GAME FINISHED - SHOW RESULT" + "\n");
+                    displayScoreResults();
                     break;
 
                 case IN_PROGRESS:
@@ -206,5 +240,28 @@ public class MainController implements SupervisorListener, RPSStateListener
                     break;
             }
         });
+    }
+
+    private void displayScoreResults()
+    {
+        logArea.appendText("Game finished - showing results" + "\n");
+        game.calculateScore(playerActions);
+
+        scoreArea.setText("Last game result:" + "\n");
+        for (String id : this.game.getLastScores().keySet()) {
+            scoreArea.appendText("id(" + id + "): " + this.game.getLastScores().get(id));
+            scoreArea.appendText("\n");
+        }
+
+        game.updateGlobalScore();
+        scoreArea.appendText("\n");
+        scoreArea.appendText("Total score:" + "\n");
+        for (String id : this.game.getGlobalScores().keySet()) {
+            scoreArea.appendText("id(" + id + "): " + this.game.getTotalScoreForPlayer(id));
+            scoreArea.appendText("\n");
+        }
+
+        this.playerActions.clear();
+        logArea.setText("New game open");
     }
 }
