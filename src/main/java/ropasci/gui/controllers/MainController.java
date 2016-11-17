@@ -95,7 +95,7 @@ public class MainController implements SupervisorListener, RPSStateListener
         Platform.runLater(() -> {
             this.game.addPlayer(peer.getConnectedPeerUsername());
 
-            peersList.getItems().add(peer.getHost().getHostAddress() + ":" + peer.getPort());
+            peersList.getItems().add(generatePeerListEntryStr(peer));
             String line = "[PEER] Added peer at " + peer.getHost().getHostAddress() + ":" + peer.getPort() + "\n";
             logArea.appendText(line);
         });
@@ -113,7 +113,7 @@ public class MainController implements SupervisorListener, RPSStateListener
             this.game.removePlayer(peer.getConnectedPeerUsername());
 
             logArea.appendText("[PEER] Disconnected peer at " + peer.getHost().getHostAddress() + ":" + peer.getPort() + "\n");
-            peersList.getItems().remove(peer.getHost().getHostAddress() + ":" + peer.getPort());
+            peersList.getItems().remove(generatePeerListEntryStr(peer));
         });
     }
 
@@ -267,5 +267,10 @@ public class MainController implements SupervisorListener, RPSStateListener
 
         this.playerActions.clear();
         logArea.appendText("New game open" + "\n");
+    }
+
+    private String generatePeerListEntryStr(Peer peer) {
+        // TODO Perhaps use StringBuilder
+        return peer.getHost().getHostAddress() + ":" + peer.getPort() + " (" + peer.getConnectedPeerUsername() + ")";
     }
 }
