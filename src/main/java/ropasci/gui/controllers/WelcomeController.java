@@ -61,13 +61,17 @@ public class WelcomeController implements Initializable {
         Platform.runLater(() -> tfUsername.getParent().requestFocus());
 
         // Context Menus for error messages
-        final ContextMenu    usernameValidator = new ContextMenu();
-        usernameValidator.setAutoHide(false);
+        final ContextMenu usernameValidator = new ContextMenu();
+        usernameValidator.setAutoHide(true);
         usernameValidator.getStyleClass().add("error");
 
         final ContextMenu listeningPortValidator = new ContextMenu();
-        listeningPortValidator.setAutoHide(false);
+        listeningPortValidator.setAutoHide(true);
         listeningPortValidator.getStyleClass().add("error");
+
+        final ContextMenu openingListeningPort = new ContextMenu();
+        openingListeningPort.setAutoHide(true);
+        openingListeningPort.getStyleClass().add("error");
 
         tfUsername.focusedProperty().addListener(
                 (arg0, oldPropertyValue, newPropertyValue) -> {
@@ -95,7 +99,7 @@ public class WelcomeController implements Initializable {
                     usernameValidator.getItems().clear();
                     MenuItem it = new MenuItem("Please choose a username");
                     usernameValidator.getItems().add(it);
-                    usernameValidator.show(tfUsername, Side.BOTTOM, 0, 10);
+                    usernameValidator.show(tfUsername, Side.BOTTOM, 0, 0);
 
                     return;
                 }
@@ -107,11 +111,10 @@ public class WelcomeController implements Initializable {
                 }
                 catch (NumberFormatException nfEx)
                 {
-                    System.out.println("invalid port");
                     listeningPortValidator.getItems().clear();
                     MenuItem it = new MenuItem("Invalid port");
                     listeningPortValidator.getItems().add(it);
-                    listeningPortValidator.show(tfListeningPort, Side.BOTTOM, 10, 0);
+                    listeningPortValidator.show(tfListeningPort, Side.BOTTOM, 0, 0);
                 }
 
                 try
@@ -127,6 +130,11 @@ public class WelcomeController implements Initializable {
                 catch (IOException e)
                 {
                     e.printStackTrace();
+
+                    openingListeningPort.getItems().clear();
+                    MenuItem it = new MenuItem("Could not listen on port: " + listeningPort);
+                    openingListeningPort.getItems().add(it);
+                    openingListeningPort.show(tfListeningPort, Side.BOTTOM, 0, 0);
                 }
 
             }
