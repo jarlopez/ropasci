@@ -50,8 +50,7 @@ public class MainController implements SupervisorListener, RPSStateListener
     private RPSState state;
     private HashMap<String, RPSGame.Action> playerActions;
 
-    public MainController(Stage stage)
-    {
+    public MainController(Stage stage) {
         this.stage = stage;
 
         this.game = new RPSGame();
@@ -75,8 +74,7 @@ public class MainController implements SupervisorListener, RPSStateListener
         this.manager = manager;
     }
 
-    public void displayScene(String username, String listeningPort)
-    {
+    public void displayScene(String username, String listeningPort) {
         this.username = username;
         this.game.addPlayer(this.username); // TODO
         this.labelUsername.setText(username);
@@ -87,8 +85,7 @@ public class MainController implements SupervisorListener, RPSStateListener
     }
 
     @Override
-    public void onPeerConnected(Peer peer)
-    {
+    public void onPeerConnected(Peer peer) {
         Platform.runLater(() -> {
             this.game.addPlayer(peer.getId());
 
@@ -99,8 +96,7 @@ public class MainController implements SupervisorListener, RPSStateListener
     }
 
     @Override
-    public void onPeerDisconnected(Peer peer)
-    {
+    public void onPeerDisconnected(Peer peer) {
         Platform.runLater(() -> {
 
             if(this.playerActions.get(peer.getId()) != null)
@@ -116,43 +112,8 @@ public class MainController implements SupervisorListener, RPSStateListener
     }
 
     @Override
-    public void onReceiveCommand(Peer peer, String data)
-    {
+    public void onReceiveCommand(Peer peer, String data) {
 
-        Platform.runLater(() -> {
-            logArea.appendText("[CMD] Received command from peer at " + peer.getHost().getHostAddress() + ":" + peer.getPort() + "\n" +
-                    "\tCommand: " + data + "\n");
-
-            // TODO change this
-            // RPSMessage.ACTION_ROCK ..
-
-            if(data == "[1]")
-            {
-                //rock
-                this.playerActions.put(peer.getId(), RPSGame.Action.ROCK);
-            }
-            else if(data == "[2]")
-            {
-                //paper
-                this.playerActions.put(peer.getId(), RPSGame.Action.PAPER);
-            }
-            else if(data == "[3]")
-            {
-                //scissors
-                this.playerActions.put(peer.getId(), RPSGame.Action.SCISSORS);
-            }
-            else
-            {
-                //TODO delete this else statement, this is just for temp testing
-                this.playerActions.put(peer.getId(), RPSGame.Action.PAPER);
-            }
-
-            this.state.stateUpdate(RPSState.StateUpdate.ACTION_RECEIVED);
-            if(peersList.getItems().size() == this.state.getNumberOfPeerActionsReceived())
-            {
-                this.state.stateUpdate(RPSState.StateUpdate.ALL_ACTIONS_RECEIVED);
-            }
-        });
     }
 
     @Override
@@ -173,16 +134,14 @@ public class MainController implements SupervisorListener, RPSStateListener
     }
 
     @Override
-    public void onNotice(Peer peer, String msg)
-    {
+    public void onNotice(Peer peer, String msg) {
         Platform.runLater(() -> {
             logArea.appendText("[ERR] Network warning: " + msg + "\n");
         });
     }
 
     // Called when a action is clicked (rock/paper/scissors)
-    public void action(ActionEvent actionEvent)
-    {
+    public void action(ActionEvent actionEvent) {
         this.state.stateUpdate(RPSState.StateUpdate.ACTION_SENT);
 
         Object source = actionEvent.getSource();
@@ -207,8 +166,7 @@ public class MainController implements SupervisorListener, RPSStateListener
     }
 
     // Called when the peer connect button is clicked
-    public void connectPeer(ActionEvent actionEvent)
-    {
+    public void connectPeer(ActionEvent actionEvent) {
         int port = Integer.parseInt(peerPort.getText());
         String host = peerHost.getText();
         try {
@@ -218,8 +176,7 @@ public class MainController implements SupervisorListener, RPSStateListener
         }
     }
 
-    public void disconnect(ActionEvent actionEvent)
-    {
+    public void disconnect(ActionEvent actionEvent) {
         // TODO
         System.out.println("Disconnect");
     }
@@ -229,15 +186,13 @@ public class MainController implements SupervisorListener, RPSStateListener
         Platform.exit();
     }
 
-    public void heartbeat(ActionEvent actionEvent)
-    {
+    public void heartbeat(ActionEvent actionEvent) {
         RPSMessage message = new RPSMessage(RPSMessage.HEARTBEAT);
         manager.broadcast(message);
     }
 
     @Override
-    public void onGameStateChanged(RPSState.State state)
-    {
+    public void onGameStateChanged(RPSState.State state) {
         Platform.runLater(() ->
         {
             switch (state)
@@ -271,12 +226,11 @@ public class MainController implements SupervisorListener, RPSStateListener
         });
     }
 
-    private void displayScoreResults()
-    {
+    private void displayScoreResults() {
         logArea.appendText("Game finished - showing results" + "\n");
         game.calculateScore(playerActions);
 
-        scoreArea.setText("Last game result:" + "\n");
+        scoreArea.setText("Last game:" + "\n");
         for (String id : this.game.getLastScores().keySet()) {
             scoreArea.appendText("id(" + id + "): " + this.game.getLastScores().get(id));
             scoreArea.appendText("\n");
