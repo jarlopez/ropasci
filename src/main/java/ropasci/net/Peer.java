@@ -13,10 +13,12 @@ public class Peer {
     private static final Logger log = Logger.getLogger(Peer.class.getName());
 
     public static final String ALREADY_CONNECTED = "Peer has already connected";
+    private static final String DELIM = "\r\n";
 
     private String id; // Our ID
     private String connectedPeerId; // ID of connected peer
     private String username; // Username, if provided
+    private String connectedPeerUsername; // Username, if provided
 
     private DataInputStream dataIn;
     private DataOutputStream dataOut;
@@ -42,6 +44,16 @@ public class Peer {
 
     public Peer(Socket socket, String id) throws IOException {
         this.id = id;
+        this.username = id;
+        this.host = socket.getInetAddress();
+        this.port = socket.getPort();
+        setupDataStreams(socket);
+        handshake();
+    }
+
+    public Peer(Socket socket, String id, String username)  throws IOException{
+        this.id = id;
+        this.username = username;
         this.host = socket.getInetAddress();
         this.port = socket.getPort();
         setupDataStreams(socket);
@@ -94,7 +106,8 @@ public class Peer {
 
     private String handshake() throws IOException {
         int dataLength = 1; // For 'handshake' byte
-        byte[] idBytes = id.getBytes("UTF-8");
+        log.info("Initiating handshake from " + username);
+        byte[] idBytes = (id + DELIM + username).getBytes("UTF-8");
         dataLength += idBytes.length;
 
         dataOut.writeInt(dataLength);
@@ -110,9 +123,14 @@ public class Peer {
         }
         byte[] peerIdBytes = new byte[responseLength - 1];
         int readLength = dataIn.read(peerIdBytes);
-        String peerId = new String(peerIdBytes, "UTF-8");
+        String peerData = new String(peerIdBytes, "UTF-8");
+        String[] splitPeerData = peerData.split(DELIM);
+        String peerId = splitPeerData[0];
+        String peerUsername = splitPeerData[1];
+        log.info("Received username: " + peerUsername);
         log.info("Handshake completed with peer:" + peerId);
         this.connectedPeerId = peerId;
+        this.connectedPeerUsername = peerUsername;
         return peerId;
     }
 
@@ -131,5 +149,9 @@ public class Peer {
             connection.out.disconnect();
             connection = null;
         }
+    }
+
+    public String getConnectedPeerUsername() {
+        return connectedPeerUsername;
     }
 }

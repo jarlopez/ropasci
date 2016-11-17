@@ -14,14 +14,19 @@ public class NetworkManager {
 
     private final int port;
     private final SupervisorListener listener;
+    private final String serverName;
     private Supervisor supervisor;
 
     private final String id;
     private  ServerSocket serverSocket;
     private PeerServer peerServer;
 
-    public NetworkManager(int port, SupervisorListener listener) {
+    public NetworkManager(int port, String serverName, SupervisorListener listener) {
         this.id = UUID.randomUUID().toString();
+        if (serverName == null) {
+            serverName = id;
+        }
+        this.serverName = serverName;
         this.port = port;
         this.listener = listener;
     }
@@ -33,13 +38,13 @@ public class NetworkManager {
 
     public void startNetworking() {
         supervisor = new Supervisor(listener, id);
-        peerServer = new PeerServer(serverSocket, supervisor);
+        peerServer = new PeerServer(serverSocket, serverName, supervisor);
         log.info("Starting peer server thread for peer:" + id);
         peerServer.startAsThread();
     }
 
     public void addPeer(String host, int port) throws UnknownHostException {
-        Peer peer = new Peer(InetAddress.getByName(host), port, id);
+        Peer peer = new Peer(InetAddress.getByName(host), port, id, serverName);
         supervisor.addPeer(peer);
     }
 

@@ -7,11 +7,13 @@ import java.net.Socket;
 public class PeerServer implements Runnable {
     private final ServerSocket serverSocket;
     private final Supervisor supervisor;
+    private final String serverName;
     private Thread thread;
     private boolean stop;
 
-    public PeerServer(ServerSocket serverSocket, Supervisor supervisor) {
+    public PeerServer(ServerSocket serverSocket, String serverName, Supervisor supervisor) {
         this.serverSocket = serverSocket;
+        this.serverName = serverName;
         this.supervisor = supervisor;
         this.stop = false;
     }
@@ -26,7 +28,7 @@ public class PeerServer implements Runnable {
         while(!stop) {
             try {
                 Socket socket = serverSocket.accept();
-                Peer peer = new Peer(socket, supervisor.getId());
+                Peer peer = new Peer(socket, supervisor.getId(), serverName);
                 supervisor.addPeer(peer);
             } catch (IOException ioEx) {
                 ioEx.printStackTrace();

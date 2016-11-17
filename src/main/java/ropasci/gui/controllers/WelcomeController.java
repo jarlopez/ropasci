@@ -117,7 +117,7 @@ public class WelcomeController implements Initializable {
                 try
                 {
                     MainController mainController = new MainController(stage);
-                    manager = new NetworkManager(listeningPort, mainController);
+                    manager = new NetworkManager(listeningPort, username, mainController);
                     manager.setupServer();
                     manager.startNetworking();
 

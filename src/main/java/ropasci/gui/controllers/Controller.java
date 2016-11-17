@@ -108,7 +108,7 @@ public class Controller implements SupervisorListener {
 
     public void startNetworking(ActionEvent actionEvent) {
         int port = Integer.parseInt(listenPort.getText());
-        manager = new NetworkManager(port, this);
+        manager = new NetworkManager(port, null, this);
         try {
             manager.setupServer();
         } catch (IOException e) {
