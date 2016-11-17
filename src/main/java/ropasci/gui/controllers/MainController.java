@@ -166,7 +166,7 @@ public class MainController implements SupervisorListener, RPSStateListener
                 this.playerActions.put(peer.getId(), RPSGame.Action.SCISSORS);
             }
             this.state.stateUpdate(RPSState.StateUpdate.ACTION_RECEIVED);
-            if (peersList.getItems().size() == this.state.getNumberOfActionsReceived()) {
+            if (peersList.getItems().size() == this.state.getNumberOfPeerActionsReceived()) {
                 this.state.stateUpdate(RPSState.StateUpdate.ALL_ACTIONS_RECEIVED);
             }
         });
