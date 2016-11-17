@@ -89,7 +89,7 @@ public class MainController implements SupervisorListener, RPSStateListener
     @Override
     public void onPeerConnected(Peer peer) {
         Platform.runLater(() -> {
-            this.game.addPlayer(peer.getId());
+            this.game.addPlayer(peer.getConnectedPeerId());
 
             peersList.getItems().add(peer.getHost().getHostAddress() + ":" + peer.getPort());
             String line = "[PEER] Added peer at " + peer.getHost().getHostAddress() + ":" + peer.getPort() + "\n";
@@ -101,12 +101,12 @@ public class MainController implements SupervisorListener, RPSStateListener
     public void onPeerDisconnected(Peer peer) {
         Platform.runLater(() -> {
 
-            if(this.playerActions.get(peer.getId()) != null)
+            if(this.playerActions.get(peer.getConnectedPeerId()) != null)
             {
-                this.playerActions.remove(peer.getId());
+                this.playerActions.remove(peer.getConnectedPeerId());
                 this.state.stateUpdate(RPSState.StateUpdate.ACTION_REMOVED);
             }
-            this.game.removePlayer(peer.getId());
+            this.game.removePlayer(peer.getConnectedPeerId());
 
             logArea.appendText("[PEER] Disconnected peer at " + peer.getHost().getHostAddress() + ":" + peer.getPort() + "\n");
             peersList.getItems().remove(peer.getHost().getHostAddress() + ":" + peer.getPort());
@@ -122,11 +122,11 @@ public class MainController implements SupervisorListener, RPSStateListener
     public void onReceiveCommand(Peer peer, String operation, String data) {
     Platform.runLater(() -> {
             if (data.equals(RPSMessage.actions[RPSMessage.ACTION_ROCK])) {
-                this.playerActions.put(peer.getId(), RPSGame.Action.ROCK);
+                this.playerActions.put(peer.getConnectedPeerId(), RPSGame.Action.ROCK);
             } else if (data.equals(RPSMessage.actions[RPSMessage.ACTION_PAPER])) {
-                this.playerActions.put(peer.getId(), RPSGame.Action.PAPER);
+                this.playerActions.put(peer.getConnectedPeerId(), RPSGame.Action.PAPER);
             } else if (data.equals(RPSMessage.actions[RPSMessage.ACTION_SCISSORS])) {
-                this.playerActions.put(peer.getId(), RPSGame.Action.SCISSORS);
+                this.playerActions.put(peer.getConnectedPeerId(), RPSGame.Action.SCISSORS);
             }
             this.state.stateUpdate(RPSState.StateUpdate.ACTION_RECEIVED);
             if (peersList.getItems().size() == this.state.getNumberOfPeerActionsReceived()) {
