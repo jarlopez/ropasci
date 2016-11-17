@@ -51,14 +51,18 @@ public class NetworkManager {
     public void broadcast(RPSMessage msg) {
         supervisor.broadcast(msg);
     }
+
     public void disconnect() {
         RPSMessage msg = new RPSMessage(RPSMessage.DISCONNECT);
         supervisor.broadcast(msg);
         supervisor.disconnect();
-        // Shutdodwn server
-        // Clean up connections? Bubble down disconnect() to senders/receivers
     }
 
+    public void shutdown() {
+        log.info("Shutting down!");
+        supervisor.shutdown();
+        peerServer.shutdown();
+    }
     public String getId() {
         return id;
     }

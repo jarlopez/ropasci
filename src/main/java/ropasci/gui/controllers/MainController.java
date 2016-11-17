@@ -202,7 +202,7 @@ public class MainController implements SupervisorListener, RPSStateListener
     public void exit(ActionEvent actionEvent)
     {
         if (manager != null) {
-            manager.disconnect();
+            manager.shutdown();
         }
         Platform.exit();
     }

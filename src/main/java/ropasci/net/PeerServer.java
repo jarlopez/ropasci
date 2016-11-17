@@ -27,12 +27,28 @@ public class PeerServer implements Runnable {
     public void run() {
         while(!stop) {
             try {
-                Socket socket = serverSocket.accept();
+                final Socket socket = serverSocket.accept();
                 Peer peer = new Peer(socket, supervisor.getId(), serverName);
                 supervisor.addPeer(peer);
             } catch (IOException ioEx) {
                 ioEx.printStackTrace();
             }
         }
+        System.out.println("Done loopin");
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            // Ignore
+        }
+    }
+
+    public void shutdown() {
+        stop = true;
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            // Ignore, we're shutting down for good
+        }
+        thread.interrupt();
     }
 }

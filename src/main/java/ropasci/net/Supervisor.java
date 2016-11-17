@@ -103,4 +103,9 @@ public class Supervisor implements PeerListener {
         }
         peers.clear();
     }
+
+    public void shutdown() {
+        peers.forEach(Peer::disconnect);
+        peers.clear();
+    }
 }
