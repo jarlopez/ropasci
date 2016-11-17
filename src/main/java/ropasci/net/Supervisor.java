@@ -92,4 +92,15 @@ public class Supervisor implements PeerListener {
             }
         }
     }
+
+    public void disconnect() {
+        if (listener != null) {
+            synchronized (peers) {
+                for (Peer peer : peers) {
+                    listener.onPeerDisconnected(peer);
+                }
+            }
+        }
+        peers.clear();
+    }
 }

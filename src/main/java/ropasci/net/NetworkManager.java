@@ -54,6 +54,7 @@ public class NetworkManager {
     public void disconnect() {
         RPSMessage msg = new RPSMessage(RPSMessage.DISCONNECT);
         supervisor.broadcast(msg);
+        supervisor.disconnect();
         // Shutdodwn server
         // Clean up connections? Bubble down disconnect() to senders/receivers
     }
