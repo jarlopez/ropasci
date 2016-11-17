@@ -189,8 +189,8 @@ public class MainController implements SupervisorListener, RPSStateListener
 
     public void clearScore()
     {
-        //TODO
-        System.out.println("clear score");
+        this.game.clearGlobalScore();
+        this.scoreArea.setText("");
     }
 
     public void disconnect(ActionEvent actionEvent) {

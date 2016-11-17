@@ -103,6 +103,10 @@ public class RPSGame {
         }
     }
 
+    public void clearGlobalScore() {
+        globalScores.clear();
+    }
+
     private void logLastScores() {
         log.info(lastScoresStr());
     }
@@ -153,6 +157,8 @@ public class RPSGame {
         game.logGlobalScores();
         game.calculateScore(playerActions);
         game.updateGlobalScore();
+        game.logGlobalScores();
+        game.clearGlobalScore();
         game.logGlobalScores();
     }
 }
