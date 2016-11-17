@@ -57,6 +57,7 @@ public class RecvHandler implements Runnable {
             }
         } catch (IOException ioEx) {
             // Ignore
+            alive = false;
         } catch (Exception ex) {
             ex.printStackTrace();
             alive = false;

@@ -20,6 +20,7 @@ public class Peer {
     private String username; // Username, if provided
     private String connectedPeerUsername; // Username, if provided
 
+    private Socket socket;
     private DataInputStream dataIn;
     private DataOutputStream dataOut;
     private SendHandler out;
@@ -47,6 +48,7 @@ public class Peer {
         this.username = id;
         this.host = socket.getInetAddress();
         this.port = socket.getPort();
+        this.socket = socket;
         setupDataStreams(socket);
         handshake();
     }
@@ -56,6 +58,7 @@ public class Peer {
         this.username = username;
         this.host = socket.getInetAddress();
         this.port = socket.getPort();
+        this.socket = socket;
         setupDataStreams(socket);
         handshake();
     }
@@ -80,7 +83,7 @@ public class Peer {
         log.info("Attempting to connect peer:" + id + " to " + host.getHostAddress() + ":" + port);
         try {
             if (dataIn == null || dataOut == null) {
-                Socket socket = new Socket(host, port);
+                this.socket = new Socket(host, port);
                 setupDataStreams(socket);
                 connectedPeerId = handshake();
                 if (id.equals(connectedPeerId)) {
@@ -100,6 +103,7 @@ public class Peer {
             listener.onConnected(this);
         } catch (IOException e) {
             e.printStackTrace();
+            disconnect();
             listener.onDisconnected(this);
         }
     }
@@ -148,6 +152,13 @@ public class Peer {
             connection.in.disconnect();
             connection.out.disconnect();
             connection = null;
+        }
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

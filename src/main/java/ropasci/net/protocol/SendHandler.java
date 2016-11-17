@@ -39,6 +39,7 @@ public class SendHandler implements Runnable {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            alive = false;
         } finally {
             peer.disconnect();
         }
