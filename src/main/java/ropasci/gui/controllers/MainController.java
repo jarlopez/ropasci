@@ -27,7 +27,9 @@ public class MainController implements SupervisorListener, RPSStateListener
     @FXML public Button paperButton;
     @FXML public Button scissorsButton;
     @FXML public TextArea logArea;
+    @FXML public Button clearLogButton;
     @FXML public TextArea scoreArea;
+    @FXML public Button clearScoreButton;
     //TODO
     @FXML public Button heartbeat;
 
@@ -178,6 +180,17 @@ public class MainController implements SupervisorListener, RPSStateListener
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+    }
+
+    public void clearLog()
+    {
+        this.logArea.setText("");
+    }
+
+    public void clearScore()
+    {
+        //TODO
+        System.out.println("clear score");
     }
 
     public void disconnect(ActionEvent actionEvent) {
