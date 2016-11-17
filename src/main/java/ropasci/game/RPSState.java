@@ -7,26 +7,26 @@ public class RPSState
     }
 
     public enum StateUpdate {
-        ACTION_RECEIVED, ACTION_SENT, ALL_ACTIONS_RECEIVED
+        ACTION_RECEIVED, ACTION_REMOVED, ACTION_SENT, ALL_ACTIONS_RECEIVED
     }
 
     private State state;
     private RPSStateListener listener;
-    private int numberOfActionsReceived;
+    private int numberOfPeerActionsReceived;
 
     public RPSState(RPSStateListener listener) {
         this.listener = listener;
         this.state = State.OPEN;
-        this.numberOfActionsReceived = 0;
+        this.numberOfPeerActionsReceived = 0;
     }
 
     public State getState(){
         return this.state;
     }
 
-    public int getNumberOfActionsReceived()
+    public int getNumberOfPeerActionsReceived()
     {
-        return this.numberOfActionsReceived;
+        return this.numberOfPeerActionsReceived;
     }
 
     public void stateUpdate(StateUpdate stateUpdate)
@@ -39,7 +39,11 @@ public class RPSState
                 if(stateUpdate == StateUpdate.ACTION_RECEIVED)
                 {
                     this.state = State.IN_PROGRESS;
-                    this.numberOfActionsReceived++;
+                    this.numberOfPeerActionsReceived++;
+                }
+                else if(stateUpdate == StateUpdate.ACTION_REMOVED)
+                {
+                    this.numberOfPeerActionsReceived--;
                 }
                 else if(stateUpdate == StateUpdate.ACTION_SENT)
                 {
@@ -49,7 +53,15 @@ public class RPSState
             case IN_PROGRESS:
                 if(stateUpdate == StateUpdate.ACTION_RECEIVED)
                 {
-                    this.numberOfActionsReceived++;
+                    this.numberOfPeerActionsReceived++;
+                }
+                else if(stateUpdate == StateUpdate.ACTION_REMOVED)
+                {
+                    this.numberOfPeerActionsReceived--;
+                    if(numberOfPeerActionsReceived == 0)
+                    {
+                        this.state = State.OPEN;
+                    }
                 }
                 else if(stateUpdate == StateUpdate.ACTION_SENT)
                 {
@@ -63,19 +75,35 @@ public class RPSState
             case WAITING_FOR_PEERS:
                 if(stateUpdate == StateUpdate.ACTION_RECEIVED)
                 {
-                    this.numberOfActionsReceived++;
+                    this.numberOfPeerActionsReceived++;
+                }
+                else if(stateUpdate == StateUpdate.ACTION_REMOVED)
+                {
+                    this.numberOfPeerActionsReceived--;
                 }
                 else if(stateUpdate == StateUpdate.ALL_ACTIONS_RECEIVED)
                 {
                     this.state = State.OPEN;
-                    this.numberOfActionsReceived = 0;
+                    this.numberOfPeerActionsReceived = 0;
                 }
                 break;
             case WAITING_FOR_SELF:
                 if(stateUpdate == StateUpdate.ACTION_SENT)
                 {
                     this.state = State.OPEN;
-                    this.numberOfActionsReceived = 0;
+                    this.numberOfPeerActionsReceived = 0;
+                }
+                else if(stateUpdate == StateUpdate.ACTION_REMOVED)
+                {
+                    this.numberOfPeerActionsReceived--;
+                    if(numberOfPeerActionsReceived == 0)
+                    {
+                        this.state = State.OPEN;
+                    }
+                    else
+                    {
+                        this.state = State.IN_PROGRESS;
+                    }
                 }
         }
 

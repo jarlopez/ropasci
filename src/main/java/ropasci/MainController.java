@@ -72,12 +72,12 @@ public class MainController implements SupervisorListener, RPSStateListener
     public void setNetworkManager(NetworkManager manager)
     {
         this.manager = manager;
-        this.game.addPlayer(this.username); // TODO
     }
 
     public void displayScene(String username, String listeningPort)
     {
         this.username = username;
+        this.game.addPlayer(this.username); // TODO
         this.labelUsername.setText(username);
         this.labelPort.setText("Listening on port: " + listeningPort);
 
@@ -101,6 +101,12 @@ public class MainController implements SupervisorListener, RPSStateListener
     public void onPeerDisconnected(Peer peer)
     {
         Platform.runLater(() -> {
+
+            if(this.playerActions.get(peer.getId()) != null)
+            {
+                this.playerActions.remove(peer.getId());
+                this.state.stateUpdate(RPSState.StateUpdate.ACTION_REMOVED);
+            }
             this.game.removePlayer(peer.getId());
 
             logArea.appendText("[PEER] Disconnected peer at " + peer.getHost().getHostAddress() + ":" + peer.getPort() + "\n");
@@ -116,7 +122,7 @@ public class MainController implements SupervisorListener, RPSStateListener
             logArea.appendText("[CMD] Received command from peer at " + peer.getHost().getHostAddress() + ":" + peer.getPort() + "\n" +
                     "\tCommand: " + data + "\n");
 
-            // TODO
+            // TODO change this
             // RPSMessage.ACTION_ROCK ..
 
             if(data == "[1]")
@@ -134,9 +140,14 @@ public class MainController implements SupervisorListener, RPSStateListener
                 //scissors
                 this.playerActions.put(peer.getId(), RPSGame.Action.SCISSORS);
             }
+            else
+            {
+                //TODO delete this else statement, this is just for temp testing
+                this.playerActions.put(peer.getId(), RPSGame.Action.PAPER);
+            }
 
             this.state.stateUpdate(RPSState.StateUpdate.ACTION_RECEIVED);
-            if(peersList.getItems().size() == this.state.getNumberOfActionsReceived())
+            if(peersList.getItems().size() == this.state.getNumberOfPeerActionsReceived())
             {
                 this.state.stateUpdate(RPSState.StateUpdate.ALL_ACTIONS_RECEIVED);
             }
@@ -223,7 +234,7 @@ public class MainController implements SupervisorListener, RPSStateListener
 
                 case IN_PROGRESS:
                     connectButton.setDisable(true);
-                    logArea.appendText("Game in progress.." + "\n");
+                    logArea.appendText("Game in progress" + "\n");
                     break;
 
                 case WAITING_FOR_PEERS:
@@ -231,7 +242,7 @@ public class MainController implements SupervisorListener, RPSStateListener
                     paperButton.setDisable(true);
                     scissorsButton.setDisable(true);
                     connectButton.setDisable(true);
-                    logArea.appendText("Waiting for all peers to send their action.." + "\n");
+                    logArea.appendText("Waiting for all peers to send their actions.." + "\n");
                     break;
 
                 case WAITING_FOR_SELF:
@@ -262,6 +273,6 @@ public class MainController implements SupervisorListener, RPSStateListener
         }
 
         this.playerActions.clear();
-        logArea.setText("New game open");
+        logArea.appendText("New game open" + "\n");
     }
 }
