@@ -4,7 +4,7 @@ import ropasci.net.Peer;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 public class SendHandler implements Runnable {
@@ -15,7 +15,7 @@ public class SendHandler implements Runnable {
     private final Peer peer;
     private final DataOutputStream out;
     private boolean alive;
-    private ConcurrentLinkedQueue<RPSMessage> sendQueue = new ConcurrentLinkedQueue<>();
+    private LinkedBlockingQueue<RPSMessage> sendQueue = new LinkedBlockingQueue<>();
     private Thread th;
 
     public SendHandler(Peer peer, DataOutputStream dataOut) {
@@ -29,13 +29,8 @@ public class SendHandler implements Runnable {
         th = Thread.currentThread();
         try {
             while (alive && out != null) {
-                    while (sendQueue.isEmpty()) {
-                        out.flush();
-                        // TODO Maybe use notify/wait?
-                        Thread.sleep(THROTTLE_MS);
-                    }
                 RPSMessage msg;
-                while ((msg = sendQueue.poll()) != null) {
+                while ((msg = sendQueue.take()) != null) {
                     msg.send(out);
                 }
             }

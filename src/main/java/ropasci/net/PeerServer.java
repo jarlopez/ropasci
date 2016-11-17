@@ -34,7 +34,6 @@ public class PeerServer implements Runnable {
                 ioEx.printStackTrace();
             }
         }
-        System.out.println("Done loopin");
         try {
             serverSocket.close();
         } catch (IOException e) {

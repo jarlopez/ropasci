@@ -53,6 +53,7 @@ public class RPSMessage {
         if (data != null && data.length > 0) {
             out.write(data);
         }
+        out.flush();
     }
 
     public byte getType() {
