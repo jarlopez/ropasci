@@ -194,8 +194,9 @@ public class MainController implements SupervisorListener, RPSStateListener
     }
 
     public void disconnect(ActionEvent actionEvent) {
-        // TODO
-        System.out.println("Disconnect");
+        if (manager != null) {
+            manager.disconnect();
+        }
     }
 
     public void exit(ActionEvent actionEvent)

@@ -38,6 +38,9 @@ public class Connection {
             case RPSMessage.HANDSHAKE:
                 break;
             case RPSMessage.DISCONNECT:
+                log.info("Cleaning up peer connection");
+                peer.disconnect();
+                listener.onDisconnected(peer);
                 break;
             case RPSMessage.ACTION:
                 break;
