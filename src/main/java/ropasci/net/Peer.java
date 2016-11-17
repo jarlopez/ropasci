@@ -112,6 +112,7 @@ public class Peer {
         int readLength = dataIn.read(peerIdBytes);
         String peerId = new String(peerIdBytes, "UTF-8");
         log.info("Handshake completed with peer:" + peerId);
+        this.connectedPeerId = peerId;
         return peerId;
     }
 
@@ -124,4 +125,11 @@ public class Peer {
         return connection;
     }
 
+    public void disconnect() {
+        if (connection != null) {
+            connection.in.disconnect();
+            connection.out.disconnect();
+            connection = null;
+        }
+    }
 }

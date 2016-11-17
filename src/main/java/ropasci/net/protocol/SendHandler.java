@@ -14,6 +14,7 @@ public class SendHandler implements Runnable {
     private final DataOutputStream out;
     private boolean alive;
     private ConcurrentLinkedQueue<RPSMessage> sendQueue = new ConcurrentLinkedQueue<>();
+    private Thread th;
 
     public SendHandler(Peer peer, DataOutputStream dataOut) {
         this.peer = peer;
@@ -23,6 +24,7 @@ public class SendHandler implements Runnable {
 
     @Override
     public void run() {
+        th = Thread.currentThread();
         try {
             while (alive && out != null) {
                     while (sendQueue.isEmpty()) {
@@ -36,9 +38,18 @@ public class SendHandler implements Runnable {
         } catch (IOException e) {
             alive = false;
             e.printStackTrace();
+        } finally {
+            peer.disconnect();
         }
     }
 
+    public void disconnect() {
+        alive = false;
+        if (th != null) {
+            th.interrupt();
+        }
+        sendQueue.clear();
+    }
     public void send(RPSMessage message) {
         addToSendQueue(message);
     }

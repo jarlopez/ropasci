@@ -12,6 +12,7 @@ public class RecvHandler implements Runnable {
     private final Peer peer;
     private final DataInputStream in;
     private boolean alive;
+    private Thread th;
 
     public RecvHandler(Peer peer, DataInputStream dataIn) {
         this.peer = peer;
@@ -22,6 +23,7 @@ public class RecvHandler implements Runnable {
     @Override
     public void run() {
         log.info("Receive handler, handling my stuff!");
+        th = Thread.currentThread();
         try {
             while (alive && in != null) {
                 int dataLength = in.readInt();
@@ -58,6 +60,15 @@ public class RecvHandler implements Runnable {
         } catch (Exception ex) {
             ex.printStackTrace();
             alive = false;
+        } finally {
+            peer.disconnect();
+        }
+    }
+
+    public void disconnect() {
+        alive = false;
+        if (th != null) {
+            th.interrupt();
         }
     }
 }

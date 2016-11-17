@@ -28,10 +28,10 @@ public class Supervisor implements PeerListener {
     @Override
     public void onConnected(Peer peer) {
         synchronized (peers) {
-            Set<String> existingPeerIds = peers.stream().map(Peer::getId).collect(Collectors.toSet());
-            if (existingPeerIds.contains(peer.getId())) {
+            Set<String> existingPeerIds = peers.stream().map(Peer::getConnectedPeerId).collect(Collectors.toSet());
+            if (peer.getConnectedPeerId().equals(id) || existingPeerIds.contains(peer.getConnectedPeerId())) {
                 log.warning("Peer already exists in list of connected peers!");
-//                peer.disconnect();
+                peer.disconnect();
                 if (listener != null) {
                     listener.onNotice(peer, Peer.ALREADY_CONNECTED);
                 }

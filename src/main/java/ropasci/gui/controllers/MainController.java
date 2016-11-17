@@ -36,6 +36,7 @@ public class MainController implements SupervisorListener, RPSStateListener
     @FXML public TextField peerHost;
     @FXML public TextField peerPort;
 
+    @FXML public Label labelId;
     @FXML public Label labelUsername;
     @FXML public Label labelPort;
 
@@ -79,6 +80,7 @@ public class MainController implements SupervisorListener, RPSStateListener
         this.game.addPlayer(this.username); // TODO
         this.labelUsername.setText(username);
         this.labelPort.setText("Listening on port: " + listeningPort);
+        this.labelId.setText(manager.getId());
 
         this.stage.setScene(this.scene);
         stage.show();
