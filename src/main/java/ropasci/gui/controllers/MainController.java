@@ -1,4 +1,4 @@
-package ropasci;
+package ropasci.gui.controllers;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 public class MainController implements SupervisorListener, RPSStateListener
 {
+    private static final String MAIN_FXML = "/main.fxml";
     @FXML public Button rockButton;
     @FXML public Button paperButton;
     @FXML public Button scissorsButton;
@@ -57,7 +58,7 @@ public class MainController implements SupervisorListener, RPSStateListener
         this.state = new RPSState(this);
         this.playerActions = new HashMap<>();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(MAIN_FXML));
         fxmlLoader.setController(this);
         try
         {

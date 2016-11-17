@@ -1,4 +1,4 @@
-package ropasci;
+package ropasci.gui.controllers;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

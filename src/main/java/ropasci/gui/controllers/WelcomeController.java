@@ -1,4 +1,4 @@
-package ropasci;
+package ropasci.gui.controllers;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 
 public class WelcomeController implements Initializable {
 
+    private static final String WELCOME_SCREEN_FXML = "/welcome.fxml";
     @FXML
     public TextField tfUsername;
     @FXML
@@ -38,7 +39,7 @@ public class WelcomeController implements Initializable {
     public WelcomeController(Stage stage) {
         this.stage = stage;
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("welcome.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(WELCOME_SCREEN_FXML));
         fxmlLoader.setController(this);
         try {
             parent = fxmlLoader.load();
