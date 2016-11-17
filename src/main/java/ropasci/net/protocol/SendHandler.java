@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 public class SendHandler implements Runnable {
     private static final Logger log = Logger.getLogger(SendHandler.class.getName());
+    private static final long THROTTLE_MS = 1000; // Used to throttle the isEmpty() while-loop
+
 
     private final Peer peer;
     private final DataOutputStream out;
@@ -29,6 +31,8 @@ public class SendHandler implements Runnable {
             while (alive && out != null) {
                     while (sendQueue.isEmpty()) {
                         out.flush();
+                        // TODO Maybe use notify/wait?
+                        Thread.sleep(THROTTLE_MS);
                     }
                 RPSMessage msg;
                 while ((msg = sendQueue.poll()) != null) {
@@ -37,6 +41,8 @@ public class SendHandler implements Runnable {
             }
         } catch (IOException e) {
             alive = false;
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             peer.disconnect();
