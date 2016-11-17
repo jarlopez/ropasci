@@ -20,9 +20,9 @@ public class RPSMessage {
             "Disconnect"
     };
 
-    public final static byte ACTION_ROCK = 1;
-    public final static byte ACTION_PAPER = 2;
-    public final static byte ACTION_SCISSORS = 3;
+    public final static byte ACTION_ROCK = 0;
+    public final static byte ACTION_PAPER = 1;
+    public final static byte ACTION_SCISSORS = 2;
 
     public final static String[] actions = {
             "Rock",

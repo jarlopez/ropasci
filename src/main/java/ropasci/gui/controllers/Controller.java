@@ -95,6 +95,11 @@ public class Controller implements SupervisorListener {
     }
 
     @Override
+    public void onReceiveCommand(Peer peer, String operation, String data) {
+
+    }
+
+    @Override
     public void onNotice(Peer peer, String msg) {
         Platform.runLater(() -> {
             logArea.appendText("[ERR] Network warning: " + msg + "\n");

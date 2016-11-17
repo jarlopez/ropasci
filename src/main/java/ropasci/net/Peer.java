@@ -60,6 +60,10 @@ public class Peer {
         return id;
     }
 
+    public String getConnectedPeerId() {
+        return connectedPeerId;
+    }
+
     public void connect(PeerListener listener) {
         log.info("Attempting to connect peer:" + id + " to " + host.getHostAddress() + ":" + port);
         try {
@@ -84,6 +88,7 @@ public class Peer {
             listener.onConnected(this);
         } catch (IOException e) {
             e.printStackTrace();
+            listener.onDisconnected(this);
         }
     }
 

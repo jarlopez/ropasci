@@ -43,4 +43,8 @@ public class Connection {
                 break;
         }
     }
+
+    public void onReceiveCommand(Peer peer, String operation, String action) {
+        listener.onReceiveCommand(peer, operation, action);
+    }
 }

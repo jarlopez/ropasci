@@ -62,6 +62,14 @@ public class Supervisor implements PeerListener {
         }
     }
 
+    @Override
+    public void onReceiveCommand(Peer peer, String operation, String data) {
+        // Simply bubble up
+        if (listener != null) {
+            listener.onReceiveCommand(peer, operation, data);
+        }
+    }
+
     public String getId() {
         return id;
     }

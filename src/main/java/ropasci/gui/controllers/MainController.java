@@ -156,6 +156,23 @@ public class MainController implements SupervisorListener, RPSStateListener
     }
 
     @Override
+    public void onReceiveCommand(Peer peer, String operation, String data) {
+    Platform.runLater(() -> {
+            if (data.equals(RPSMessage.actions[RPSMessage.ACTION_ROCK])) {
+                this.playerActions.put(peer.getId(), RPSGame.Action.ROCK);
+            } else if (data.equals(RPSMessage.actions[RPSMessage.ACTION_PAPER])) {
+                this.playerActions.put(peer.getId(), RPSGame.Action.PAPER);
+            } else if (data.equals(RPSMessage.actions[RPSMessage.ACTION_SCISSORS])) {
+                this.playerActions.put(peer.getId(), RPSGame.Action.SCISSORS);
+            }
+            this.state.stateUpdate(RPSState.StateUpdate.ACTION_RECEIVED);
+            if (peersList.getItems().size() == this.state.getNumberOfActionsReceived()) {
+                this.state.stateUpdate(RPSState.StateUpdate.ALL_ACTIONS_RECEIVED);
+            }
+        });
+    }
+
+    @Override
     public void onNotice(Peer peer, String msg)
     {
         Platform.runLater(() -> {

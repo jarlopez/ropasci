@@ -4,7 +4,6 @@ import ropasci.net.Peer;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class RecvHandler implements Runnable {
@@ -45,7 +44,12 @@ public class RecvHandler implements Runnable {
                         in.readFully(bytes);
                         System.out.println(bytes);
                         // TODO Create well-formed message, pass it up
-                        peer.getConnection().onReceiveCommand(peer, Arrays.toString(bytes));
+                        int actionIndex = RPSMessage.ACTION - 1;
+                        peer.getConnection().onReceiveCommand(
+                                peer,
+                                RPSMessage.operations[actionIndex],
+                                RPSMessage.actions[bytes[0]]
+                        );
 
                 }
             }
