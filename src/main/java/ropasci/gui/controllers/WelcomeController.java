@@ -58,21 +58,26 @@ public class WelcomeController implements Initializable {
     public void initialize(URL location, ResourceBundle resources)
     {
         // Hack to prevent autofocus on first field
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                tfUsername.getParent().requestFocus();
-            }
-        });
+        Platform.runLater(() -> tfUsername.getParent().requestFocus());
 
         // Context Menus for error messages
-        final ContextMenu usernameValidator = new ContextMenu();
+        final ContextMenu    usernameValidator = new ContextMenu();
         usernameValidator.setAutoHide(false);
         usernameValidator.getStyleClass().add("error");
 
         final ContextMenu listeningPortValidator = new ContextMenu();
         listeningPortValidator.setAutoHide(false);
         listeningPortValidator.getStyleClass().add("error");
+
+        tfUsername.focusedProperty().addListener(
+                (arg0, oldPropertyValue, newPropertyValue) -> {
+                    if (newPropertyValue) {
+                        // Clearing message if any
+//                        actiontarget.setText("");
+                        // Hiding the error message
+                        usernameValidator.hide();
+                    }
+                });
 
         nextButton.setOnAction(new EventHandler<ActionEvent>()
         {
@@ -85,7 +90,7 @@ public class WelcomeController implements Initializable {
                 Integer listeningPort = null;
 
                 //Validate username
-                if(username == null || username == "")
+                if (username == null || username.equals(""))
                 {
                     usernameValidator.getItems().clear();
                     MenuItem it = new MenuItem("Please choose a username");

@@ -84,6 +84,8 @@ public class MainController implements SupervisorListener, RPSStateListener
 
         this.stage.setScene(this.scene);
         stage.show();
+        stage.setOnCloseRequest(e -> exit(null));
+
     }
 
     @Override
@@ -185,6 +187,9 @@ public class MainController implements SupervisorListener, RPSStateListener
 
     public void exit(ActionEvent actionEvent)
     {
+        if (manager != null) {
+            manager.disconnect();
+        }
         Platform.exit();
     }
 

@@ -1,0 +1,9 @@
+- EIther disable actions until connected or allow action no-op
+    - Start in "PENDING" state?
+- Clear log button
+- Clear score?
+- Handle disconnect by button AND by closing app // network error
+- Show info msg if port is not available
+- Also handshake usernames  :p
+- TODO Shutdown server
+- Use blocking threadsafe queue for sendHandlers
