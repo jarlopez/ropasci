@@ -253,15 +253,16 @@ public class MainController implements SupervisorListener, RPSStateListener
 
         scoreArea.setText("Last game:" + "\n");
         for (String id : this.game.getLastScores().keySet()) {
-            scoreArea.appendText("id(" + id + "): " + this.game.getLastScores().get(id));
+            scoreArea.appendText(id + ": " + this.game.getLastScores().get(id));
             scoreArea.appendText("\n");
         }
 
         game.updateGlobalScore();
         scoreArea.appendText("\n");
         scoreArea.appendText("Total score:" + "\n");
+
         for (String id : this.game.getGlobalScores().keySet()) {
-            scoreArea.appendText("id(" + id + "): " + this.game.getTotalScoreForPlayer(id));
+            scoreArea.appendText(id + ": " + this.game.getTotalScoreForPlayer(id));
             scoreArea.appendText("\n");
         }
 
