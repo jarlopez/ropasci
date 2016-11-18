@@ -88,7 +88,11 @@ public class Supervisor implements PeerListener {
         log.info("Broadcasting to all peers: " + msg);
         synchronized (peers) {
             for (Peer peer : peers) {
-                peer.getConnection().requestSend(msg);
+                try {
+                    peer.getConnection().requestSend(msg);
+                } catch (Exception ex) {
+                    // Peer has been disconnected!
+                }
             }
         }
     }
